@@ -81,7 +81,7 @@ export default function Home() {
       }
 
       const data = await response.json();
-      setResult(data.digit);
+      setResult(data.number);
     } catch {
       setError('Failed to analyze image. Please try again.');
     }

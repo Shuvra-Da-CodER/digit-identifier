@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
   // If auth is undefined (Firebase not configured), render immediately (loading = false).
   // If auth exists, wait for onAuthStateChanged callback (loading = true).
   const [loading, setLoading] = useState(auth !== undefined);
-
+  console.log('authprovider reached')
   function signup(email, password) {
     if (!auth) throw new Error('Firebase not configured');
     return createUserWithEmailAndPassword(auth, email, password);

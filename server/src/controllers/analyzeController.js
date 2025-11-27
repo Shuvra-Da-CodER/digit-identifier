@@ -46,7 +46,7 @@ async function analyzeImage(req, res) {
 
     // Parse the response to an integer
     const digit = parseInt(text, 10);
-
+    console.log('ans', digit);
     // Validate the parsed result
     if (isNaN(digit) || digit < -1 || digit > 9) {
       return res.json({

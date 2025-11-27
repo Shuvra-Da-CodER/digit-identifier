@@ -18,6 +18,7 @@ function App() {
               <ProtectedRoute>
                 <Home />
               </ProtectedRoute>
+              // <Home />
             }
           />
         </Routes>
