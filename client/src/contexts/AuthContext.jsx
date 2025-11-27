@@ -16,8 +16,10 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  // If auth is not configured, don't wait for it
-  const [loading, setLoading] = useState(!!auth);
+  // Start in loading state only if Firebase auth is configured.
+  // If auth is undefined (Firebase not configured), render immediately (loading = false).
+  // If auth exists, wait for onAuthStateChanged callback (loading = true).
+  const [loading, setLoading] = useState(auth !== undefined);
 
   function signup(email, password) {
     if (!auth) throw new Error('Firebase not configured');

@@ -5,6 +5,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ImageIcon from '@mui/icons-material/Image';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
 export default function Home() {
   const [imageBase64, setImageBase64] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -24,12 +27,16 @@ export default function Home() {
     }
   }
 
-  function handleFileSelect(e) {
-    const file = e.target.files[0];
+  function processFile(file) {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
       setError('Please select an image file');
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setError('File size exceeds 5MB limit');
       return;
     }
 
@@ -46,6 +53,11 @@ export default function Home() {
     reader.readAsDataURL(file);
   }
 
+  function handleFileSelect(e) {
+    const file = e.target.files[0];
+    processFile(file);
+  }
+
   async function analyzeImage() {
     if (!imageBase64) {
       setError('Please select an image first');
@@ -56,7 +68,7 @@ export default function Home() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/analyze', {
+      const response = await fetch(`${API_URL}/api/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,13 +92,7 @@ export default function Home() {
   function handleDrop(e) {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file) {
-      const input = fileInputRef.current;
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      input.files = dataTransfer.files;
-      handleFileSelect({ target: input });
-    }
+    processFile(file);
   }
 
   function handleDragOver(e) {
